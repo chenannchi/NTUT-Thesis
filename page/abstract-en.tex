@@ -2,13 +2,18 @@
 \begin{EnAbstract}
     \begin{EnAbstractItems}
         % 關鍵詞，請自己填，多個關鍵字以逗號 "," 隔開
-        \noindent \text Keyword: (Fill it)
+        \noindent \text Keyword: Large Language Model Agents, Self-Correction Mechanism, Case-Based Learning, Dynamic Plan Repair
 
     \end{EnAbstractItems}
 
     \begin{EnAbstractDescription}
-        Start writing abstract from here. Start writing abstract from here. Start writing abstract from here. Start writing abstract from here. Start writing abstract from here. Start writing abstract from here. Start writing abstract from here. Start writing abstract from here.
-    \end{EnAbstractDescription}
+        When executing API tool-use tasks, Large Language Model (LLM) agents often fail due to incomplete planning, missing parameters, authentication errors, improper API selection, or misinterpretation of execution results. Existing frameworks predominantly rely on holistic re-planning upon encountering errors, which tends to waste successfully executed steps and may lead to recurring the same mistakes.
+
+        To address this issue, this research proposes a self-correction mechanism for API task agents that integrates case-based learning with dynamic plan repair. The system generates actionable repair feedback through structured error diagnosis and performs local plan adjustments at the point of failure using a "Rerollout" mechanism, which includes inserting, replacing, or deleting repair steps.
+
+        Furthermore, the system extracts successfully repaired cases into atomic experiences, which are then reused through semantic retrieval during the planning, re-planning, and local repair stages. In terms of implementation, this study also incorporates structured plan representation, dependency correction, token synchronization, and observability metric logging to support subsequent experimental analysis.
+
+        Preliminary results indicate that this mechanism provides a more fine-grained error-handling workflow and establishes a quantifiable foundation for evaluating the error recovery capabilities and the effectiveness of experience reuse in agents.    \end{EnAbstractDescription}
     
 \end{EnAbstract}
 
