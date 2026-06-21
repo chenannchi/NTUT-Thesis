@@ -2,18 +2,12 @@
 \begin{EnAbstract}
     \begin{EnAbstractItems}
         % 關鍵詞，請自己填，多個關鍵字以逗號 "," 隔開
-        \noindent \text Keyword: Large Language Model Agents, Self-Correction Mechanism, Case-Based Learning, Dynamic Plan Repair
+        \noindent \text Keyword: LLM agents, API task automation, case-based learning, dynamic plan repair
 
     \end{EnAbstractItems}
 
     \begin{EnAbstractDescription}
-        When executing API tool-use tasks, Large Language Model (LLM) agents often fail due to incomplete planning, missing parameters, authentication errors, improper API selection, or misinterpretation of execution results. Existing frameworks predominantly rely on holistic re-planning upon encountering errors, which tends to waste successfully executed steps and may lead to recurring the same mistakes.
-
-        To address this issue, this research proposes a self-correction mechanism for API task agents that integrates case-based learning with dynamic plan repair. The system generates actionable repair feedback through structured error diagnosis and performs local plan adjustments at the point of failure using a "Rerollout" mechanism, which includes inserting, replacing, or deleting repair steps.
-
-        Furthermore, the system extracts successfully repaired cases into atomic experiences, which are then reused through semantic retrieval during the planning, re-planning, and local repair stages. In terms of implementation, this study also incorporates structured plan representation, dependency correction, token synchronization, and observability metric logging to support subsequent experimental analysis.
-
-        Preliminary results indicate that this mechanism provides a more fine-grained error-handling workflow and establishes a quantifiable foundation for evaluating the error recovery capabilities and the effectiveness of experience reuse in agents.    \end{EnAbstractDescription}
-    
+        Large language models (LLMs) have recently been widely adopted in agent systems, where they can plan tasks, select tools, and invoke APIs according to user goals to complete real-world cross-application tasks. In multi-step API tasks, however, an error in API selection, parameter binding, data processing, or dependency handling at any step may cause the subsequent execution to deviate from the original objective. Traditional approaches usually regenerate the entire plan after an error, which may increase execution cost and disrupt the state and data flow accumulated from completed steps. Therefore, incorporating experience-based guidance and local repair mechanisms into an existing planning framework is an important issue for improving the reliability of API task agents. Based on the API Knowledge Graph Agent (APIKGAgent), this study proposes the Experience-guided Local Repair APIKGAgent (ER-APIKGAgent). The proposed system first extracts reusable atomic experiences from successful tasks in the training data and provides them as references for initial planning, replanning, and repair through semantic retrieval. It then introduces a local repair process that searches for possible repair APIs according to execution errors, dependency information from related steps, and API call evidence, and adjusts the local plan through insertion, replacement, or deletion of steps; when an error affects the structure of the original plan, the system falls back to replanning. Experiments were conducted in the AppWorld simulation environment, which contains 9 application services and 457 APIs and reflects realistic multi-step cross-application tasks. Performance was evaluated based on task completion and the expected state changes in the environment, and the effects of local repair and atomic experience were examined through overall performance comparison, stepwise ablation studies, and failure-case analysis. On the AppWorld test\_normal dataset we observe an overall task success rate of X\%; local repair helps when errors have explicit signals but may be insufficient for failures caused by complex task structures or external state constraints.
+    \end{EnAbstractDescription}
 \end{EnAbstract}
 
