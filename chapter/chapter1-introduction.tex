@@ -1,99 +1,13 @@
-\begin{ZhChapter}
+\chapter{緒論}
 
-\chapter{緒論（大標）}
+\section{研究動機}
 
-\section{研究動機與背景（小標）}
+本研究聚焦於大型語言模型代理人在多步驟 API 任務中的規劃、執行與錯誤修復能力。當代理人需要跨應用程式完成目標時，單一步驟的失誤可能連鎖影響後續流程，因此有必要引入成功經驗參考與動態修復機制，以提升整體任務成功率與穩定性。
 
-\begin{equation} 
-    \mbox{$x = \dfrac{-b\pm\sqrt{b^2-4ac}}{2a}$}
-\end{equation}
+\section{研究目的}
 
-\subsection{研究背景(小小標)}
+本研究旨在以 APIKGAgent 為基礎，設計可重複利用的成功經驗注入流程與局部修復流程，並分析這些改良對任務執行結果的影響。具體目標包括：萃取可遷移的成功經驗、建立動態修復策略、以及觀察經驗累積對後續任務的幫助。
 
-\text 背景內文背景內文背景內文背景內文,背景內文背景內文背景內文背景內文背景內文背景內文，如表 1.1 所示。
+\section{論文架構}
 
-\begin{table*}[htbp]
-    \centering
-    \caption{表格範例標題} \label{tab: complexity}
-    \makebox[\linewidth][c]{
-    \renewcommand\arraystretch{1.2}{
-        \begin{tabular}{| l | c  c  c  c |}
-        \hline
-        Protocol & $P$ & $CS_1$ & $CS_2$ & $RG$ \\
-        \hline
-        SD & $O(1)$, $O(1)$, N/A & $O(n-t)$, $O(1)$, N/A & $O(n-t)$, $O(1)$, N/A & $O(1)$, $O(n)$, $O(n)$ \\
-        MSSMul & $O(1)$, $O(1)$, N/A & $O(n-t)$, $O(n)$, $O(1)$ & $O(n-t)$, $O(n)$, N/A & $O(1)$, $O(n)$, $O(n)$ \\
-        MSSAdd & $O(1)$, $O(1)$, N/A & $O(n-t)$, $O(n)$, $O(1)$ & N/A, N/A, N/A & $O(1)$, $O(n)$, $O(n)$ \\
-        SC & $O(1)$, $O(1)$, N/A & $O(n-t)$, $O(n)$, $O(1)$ & $O(n-t)$, $O(n)$, N/A & $O(1)$, $O(n)$, $O(n)$ \\
-        \hline 
-        \end {tabular}
-    }}
-\end {table*}
-
-\subsubsection{研究動機(小小標)}
-
-\begin{equation} 
-    \mbox{$(1+x)^n = 1 + \dfrac{nx}{1!} + \dfrac{n(n-1)x^2}{2!}$}
-\end{equation}
-
-動機動機動機動機，動機動機動機動機動機動機動機動機動機動機動機動機，動機動機動機動機動機動機動機動機。
-
-動機動機動機動機動機動機動機動機，動機動機動機動機動機動機動機動機動機動機動機動機。動機動機動機動機動機動機動機動機，動機動機動機動機動機動機動機動機動機動機動機動機。動機動機動機動機動機動機動機動機，動機動機動機動機動機動機動機動機動機動機動機動機，如圖 1.1、圖 1.2 所示。
-
-\begin{figure*}[htbp]
-    \centering
-    \includegraphics[width = 1\textwidth]{image.jpeg}
-    \caption{Cool train station}
-    \label{fig: image}
-\end{figure*}
-
-\begin{figure*}[htbp]
-    \centering
-    \includegraphics[width = 1\textwidth]{image.jpeg}
-    \caption{"Cool train station" "Cool train station" "Cool train station" "Cool train station" "Cool train station" "Cool train station" "Cool train station" "Cool train station" "Cool train station" "Cool train station" "Cool train station" "Cool train station"}
-    \label{fig: image}
-\end{figure*}
-
-\begin{figure*}[htbp]
-    \centering
-    \includegraphics[width = 1\textwidth]{image.jpeg}
-    \caption{Cool train station}
-    \label{fig: image}
-\end{figure*}
-
-\begin{table*}[htbp]
-    \centering
-    \caption{表格範例標題} \label{tab: complexity}
-    \makebox[\linewidth][c]{
-    \renewcommand\arraystretch{1.2}{
-        \begin{tabular}{| l | c  c  c  c |}
-        \hline
-        Protocol & $P$ & $CS_1$ & $CS_2$ & $RG$ \\
-        \hline
-        MSSMul & $O(1)$, $O(1)$, N/A & $O(n-t)$, $O(n)$, $O(1)$ & $O(n-t)$, $O(n)$, N/A & $O(1)$, $O(n)$, $O(n)$ \\
-        MSSAdd & $O(1)$, $O(1)$, N/A & $O(n-t)$, $O(n)$, $O(1)$ & N/A, N/A, N/A & $O(1)$, $O(n)$, $O(n)$ \\
-        SC & $O(1)$, $O(1)$, N/A & $O(n-t)$, $O(n)$, $O(1)$ & $O(n-t)$, $O(n)$, N/A & $O(1)$, $O(n)$, $O(n)$ \\
-        MSSMul & $O(1)$, $O(1)$, N/A & $O(n-t)$, $O(n)$, $O(1)$ & $O(n-t)$, $O(n)$, N/A & $O(1)$, $O(n)$, $O(n)$ \\
-        MSSAdd & $O(1)$, $O(1)$, N/A & $O(n-t)$, $O(n)$, $O(1)$ & N/A, N/A, N/A & $O(1)$, $O(n)$, $O(n)$ \\
-        SC & $O(1)$, $O(1)$, N/A & $O(n-t)$, $O(n)$, $O(1)$ & $O(n-t)$, $O(n)$, N/A & $O(1)$, $O(n)$, $O(n)$ \\
-        \hline 
-        \end {tabular}
-    }}
-\end {table*}
-
-動機動機動機動機，動機動機動機動機動機動機動機動機動機動機動機動機，動機動機動機動機動機動機動機動機。
-
-動機動機動機動機，動機動機動機動機動機動機動機動機動機動機動機動機，動機動機動機動機動機動機動機動機。動機動機動機動機，動機動機動機動機動機動機動機動機動機動機動機動機，動機動機動機動機動機動機動機動機。
-
-動機動機動機動機，動機動機動機動機動機動機動機動機動機動機動機動機，動機動機動機動機動機動機動機動機。動機動機動機動機，動機動機動機動機動機動機動機動機動機動機動機動機，動機動機動機動機動機動機動機動機。動機動機動機動機，動機動機動機動機動機動機動機動機動機動機動機動機，動機動機動機動機動機動機動機動機。
-
-動機動機動機動機，動機動機動機動機動機動機動機動機動機動機動機動機，動機動機動機動機動機動機動機動機。動機動機動機動機，動機動機動機動機動機動機動機動機動機動機動機動機，動機動機動機動機動機動機動機動機。動機動機動機動機，動機動機動機動機動機動機動機動機動機動機動機動機，動機動機動機動機動機動機動機動機。動機動機動機動機，動機動機動機動機動機動機動機動機動機動機動機動機，動機動機動機動機動機動機動機動機。
-
-\begin{figure*}[htbp]
-    \centering
-    \includegraphics[width = 0.5\textwidth]{image.jpeg}
-    \caption{Cool train station}
-    \label{fig: image}
-\end{figure*}
-
-\end{ZhChapter}
+本論文共分為六章。第一章說明研究背景、動機與目的；第二章整理相關技術與文獻；第三章介紹系統方法與整體架構；第四章說明系統實作細節；第五章呈現實驗設計與結果分析；第六章總結研究成果並提出未來研究方向。

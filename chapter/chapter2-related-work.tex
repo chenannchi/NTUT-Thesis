@@ -1,36 +1,17 @@
-\begin{ZhChapter}
+\chapter{相關技術與文獻探討}
 
-\chapter{若標題太長，則可以分成兩行排列的形式撰寫}
+\section{大型語言模型代理人}
 
-\section{名詞定義（小標）}
+本節整理大型語言模型作為代理人核心時的基本概念、能力邊界與常見設計方式。
 
-定義定義定義定義定義定義\cite{latex2e}，定義定義定義定義，定義定義定義定義定義定義定義定義定義定義，定義定義。
+\section{API任務自動化}
 
-\begin{table*}[htbp]
-    \centering
-    \caption{表格範例標題} \label{tab: complexity}
-    \makebox[\linewidth][c]{
-    \renewcommand\arraystretch{1.2}{
-        \begin{tabular}{| l | c  c  c  c |}
-        \hline
-        Protocol & $P$ & $CS_1$ & $CS_2$ & $RG$ \\
-        \hline
-        MSSMul & $O(1)$, $O(1)$, N/A & $O(n-t)$, $O(n)$, $O(1)$ & $O(n-t)$, $O(n)$, N/A & $O(1)$, $O(n)$, $O(n)$ \\
-        SC & $O(1)$, $O(1)$, N/A & $O(n-t)$, $O(n)$, $O(1)$ & $O(n-t)$, $O(n)$, N/A & $O(1)$, $O(n)$, $O(n)$ \\
-        \hline 
-        \end {tabular}
-    }}
-\end {table*}
+本節整理 API 任務規劃、參數綁定、工具呼叫與多步驟執行流程的相關研究。
 
-\section{模型說明（小標）}
+\section{案例式學習}
 
-說明說明說明說明，說明說明說明說明說明說明說明說明說明說明說明說明，說明說明說明說明說明說明說明說明。
+本節說明案例式學習如何透過既有成功案例支援推論、規劃與錯誤修正。
 
-\begin{figure*}[htbp]
-    \centering
-    \includegraphics[width = 0.5\textwidth]{image.jpeg}
-    \caption{Cool train station}
-    \label{fig: image}
-\end{figure*}
+\section{動態計畫修復}
 
-\end{ZhChapter}
+本節整理任務執行過程中，如何根據錯誤訊號與局部狀態修正原始計畫的相關方法。
