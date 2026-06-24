@@ -4,24 +4,64 @@
 
 \section{研究問題}
 
-在此列出本章實驗欲驗證的研究問題。
+\subsection{研究問題一}
+
+相較於原 APIKGAgent，CBR-APIKGAgent 對 AppWorld test\_normal 任務完成率有何影響？
+
+\subsection{研究問題二}
+
+原子化經驗與動態局部修復分別對任務完成率及錯誤修復表現有何影響？
+
+\subsection{研究問題三}
+
+動態局部修復適用於哪些錯誤類型，其失敗情境與能力限制為何？
 
 \section{實驗設置}
 
-\subsection{實驗基準}
+\subsection{AppWorld 資料集與任務範圍}
 
 \subsection{評估指標}
 
-\subsection{實驗環境}
+\subsection{實驗環境與模型設定}
 
 本研究於 AppWorld \cite{trivedi2024appworld} 環境中進行實驗，並使用其任務資料與狀態式評估機制驗證代理人的任務完成情形。
 
-\section{實驗一：整體效能比較}
+\subsection{比較方法}
 
-\section{實驗二：逐步式消融實驗}
+\section{整體效能比較}
 
-\section{實驗三：動態修復行為與失敗案例分析}
+本節以 APIKGAgent 與 CBR-APIKGAgent 為主要比較對象；其他方法僅於資料集、實驗設定與評估方式一致時進行直接比較。
 
-% \section{延伸實驗：全域與區域經驗拆解}
+\section{消融實驗}
+
+\subsection{實驗組別}
+
+本研究分別比較基礎系統、僅使用原子化經驗、僅使用動態局部修復，以及同時使用兩項機制的完整系統。
+
+\subsection{原子化經驗之影響}
+
+\subsection{動態局部修復之影響}
+
+\subsection{兩項機制之綜合影響}
+
+\section{動態局部修復分析}
+
+\subsection{修復觸發與執行情形}
+
+\subsection{成功修復案例}
+
+\subsection{修復失敗案例}
+
+\subsection{錯誤類型分析}
+
+\subsection{修復策略分析}
+
+\section{討論}
+
+\subsection{原子化經驗的影響與適用情境}
+
+\subsection{動態局部修復的影響與適用情境}
+
+\subsection{系統限制與能力邊界}
 
 \end{ZhChapter}

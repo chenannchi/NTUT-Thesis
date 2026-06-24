@@ -1,41 +1,53 @@
 \begin{ZhChapter}
 
-\chapter{系統實作與細節}
+\chapter{系統實作}
 
 \section{開發環境與工具}
 
-本研究採用 AppWorld \cite{trivedi2024appworld} 作為多應用程式 API 任務的執行與評估環境。本節將說明系統開發所使用的程式語言、框架、資料庫、模型服務及相關工具。
+\subsection{LangGraph}
 
-\section{原 APIKGAgent 基礎執行流程與本研究修改點}
+\subsection{Neo4j}
 
-\subsection{Main Graph / Executor Graph / API Execute Graph 概述}
+\subsection{大型語言模型與嵌入模型}
 
-\subsection{Process Step / API Step 概述}
+\subsection{其他開發環境}
 
-\subsection{本研究延伸位置說明}
+\section{APIKGAgent 基礎實作與修改位置}
 
-\section{全域成功經驗建立與注入}
+\subsection{主控制流程}
 
-\subsection{train dataset 成功經驗萃取}
+\subsection{API 搜尋流程}
 
-\subsection{RAG 語意檢索與 Planner 注入}
+\subsection{任務執行與重新規劃流程}
 
-\section{Rerollout 動態修復實作}
+\subsection{CBR-APIKGAgent 修改位置}
 
-\subsection{錯誤分類與修復 API 搜尋}
+本節說明經驗檢索與提示注入位置、Rerollout 插入位置，以及原始流程與修改後流程的程式差異。
 
-\subsection{任務步驟的新增、刪除與更新}
+\section{原子化經驗建立與檢索實作}
 
-\subsection{與原 replan 機制之差異}
+\subsection{訓練資料成功任務軌跡萃取}
 
-\section{區域成功修復經驗儲存與檢索}
+\subsection{原子化經驗資料格式}
 
-\subsection{成功修復經驗萃取}
+\subsection{經驗向量化與語意檢索}
 
-\subsection{Local recovery lessons 儲存與後續任務再利用}
+\subsection{Planner 經驗注入}
 
-\section{其他實作細節}
+\subsection{Retry Planner 經驗注入}
 
-在此補充其他實作中需要交代的細節。
+\subsection{Rerollout 經驗注入}
+
+\section{Rerollout 動態局部修復實作}
+
+\subsection{修復觸發與錯誤證據整理}
+
+\subsection{相依步驟資料取得}
+
+\subsection{修復 API 搜尋流程}
+
+\subsection{插入、替換與刪除策略實作}
+
+\subsection{局部修復失敗與重新規劃回退}
 
 \end{ZhChapter}
