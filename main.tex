@@ -15,14 +15,20 @@
 \usepackage{amsmath}
 \usepackage[backend=bibtex,style=ieee,sorting=none]{biblatex}
 \usepackage{tabularx}
+\usepackage{multirow}
 \usepackage{csquotes}
 \usepackage{subcaption}
+\usepackage[ruled,vlined,linesnumbered]{algorithm2e}
 
 \MakeAutoQuote{“}{”}
 \MakeOuterQuote{"}
 
 \captionsetup{justification=centering,singlelinecheck=false,font={normalsize,stretch=2}}
 \captionsetup[sub]{justification=centering,singlelinecheck=false,font={normalsize,stretch=2}}
+\SetAlgorithmName{演算法}{演算法}{演算法列表}
+\SetKwInput{KwInput}{Input}
+\SetKwInput{KwOutput}{Output}
+\SetKw{KwRet}{return}
 
 \renewcommand{\baselinestretch}{1.5}
 \xeCJKsetup{AutoFakeBold=true, AutoFakeSlant=true}
