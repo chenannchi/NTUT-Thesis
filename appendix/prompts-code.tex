@@ -1,11 +1,54 @@
-\chapter*{附錄}
+\chapter*{附錄 A 系統提示詞}
 \phantomsection
-\addcontentsline{toc}{chapter}{附錄}
+\addcontentsline{toc}{chapter}{附錄 A 系統提示詞}
 
-\section{Prompts}
+\setcounter{section}{0}
+\renewcommand{\thesection}{A.\arabic{section}}
+\renewcommand{\thesubsection}{\thesection.\arabic{subsection}}
+\renewcommand{\theHsection}{appendix.A.\arabic{section}}
+\renewcommand{\theHsubsection}{appendix.A.\arabic{section}.\arabic{subsection}}
 
-在此整理撰寫論文、設計實驗與系統實作時使用的 prompts。
+本附錄整理 CBR-APIKGAgent 於任務規劃、局部修復與重新規劃階段所使用之主要提示詞。正文第四章僅說明各提示詞的輸入資訊與設計目的；完整提示內容則於本附錄列出，以利讀者對照系統實作。
 
-\section{程式碼}
+\section{初始規劃提示詞}
+\label{app:initial-planning-prompt}
+
+【待補】整理初始規劃階段使用之提示詞，包含使用者任務、候選 API、規劃導向經驗與計畫格式限制。
+
+\section{錯誤分類與可行回饋提示詞}
+\label{app:error-feedback-prompt}
+
+【待補】整理步驟失敗後用於產生暫定錯誤分類與可行回饋之提示詞，包含失敗步驟、失敗 API 資訊、原始錯誤訊息、相依資料脈絡與結構化失敗資訊。
+
+錯誤分類提示詞中使用之分類集合依模組概念整理如下：
+
+\begin{itemize}
+    \item \textbf{記憶相關：} \texttt{oversimplification}、\texttt{false\_memory}、\texttt{retrieval\_failure}。
+    \item \textbf{反思相關：} \texttt{progress\_misassessment}、\texttt{outcome\_misinterpretation}、\texttt{wrong\_causal\_attribution}、\texttt{reflection\_hallucination}。
+    \item \textbf{規劃相關：} \texttt{constraint\_ignorance}、\texttt{impossible\_plan}、\texttt{inefficient\_plan}。
+    \item \textbf{行動相關：} \texttt{plan\_misalignment}、\texttt{format\_error}、\texttt{parameter\_error}。
+    \item \textbf{系統相關：} \texttt{step\_limit\_reached}、\texttt{tool\_execution\_error}、\texttt{llm\_limitation}、\texttt{environment\_error}。
+    \item \textbf{驗證與其他：} \texttt{auth\_error}、\texttt{unknown}。
+\end{itemize}
+
+\section{局部修復策略選擇提示詞}
+\label{app:repair-strategy-prompt}
+
+【待補】整理局部修復階段用於選擇修復 API、相依資料使用方式與插入、替換、刪除策略之提示詞。
+
+\section{重新規劃提示詞}
+\label{app:replanning-prompt}
+
+【待補】整理重新規劃階段使用之提示詞，包含原始任務、既有計畫、失敗資訊、已完成步驟結果，以及規劃導向與修復導向經驗。
+
+\chapter*{附錄 B 程式碼}
+\phantomsection
+\addcontentsline{toc}{chapter}{附錄 B 程式碼}
+
+\setcounter{section}{0}
+\renewcommand{\thesection}{B.\arabic{section}}
+\renewcommand{\thesubsection}{\thesection.\arabic{subsection}}
+\renewcommand{\theHsection}{appendix.B.\arabic{section}}
+\renewcommand{\theHsubsection}{appendix.B.\arabic{section}.\arabic{subsection}}
 
 在此整理重要程式碼片段與關鍵實作說明。
