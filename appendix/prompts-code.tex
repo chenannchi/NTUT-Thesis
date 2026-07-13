@@ -1,54 +1,417 @@
-\chapter*{附錄 A 系統提示詞}
+\chapter*{附錄 A 核心提示詞、輸入資料與輸出格式}
 \phantomsection
-\addcontentsline{toc}{chapter}{附錄 A 系統提示詞}
+\addcontentsline{toc}{chapter}{附錄 A 核心提示詞、輸入資料與輸出格式}
 
 \setcounter{section}{0}
 \renewcommand{\thesection}{A.\arabic{section}}
 \renewcommand{\thesubsection}{\thesection.\arabic{subsection}}
 \renewcommand{\theHsection}{appendix.A.\arabic{section}}
 \renewcommand{\theHsubsection}{appendix.A.\arabic{section}.\arabic{subsection}}
+\setcounter{table}{0}
+\setcounter{figure}{0}
+\renewcommand{\thetable}{A.\arabic{table}}
+\renewcommand{\thefigure}{A.\arabic{figure}}
 
-本附錄整理 CBR-APIKGAgent 於任務規劃、局部修復與重新規劃階段所使用之主要提示詞。正文第四章僅說明各提示詞的輸入資訊與設計目的；完整提示內容則於本附錄列出，以利讀者對照系統實作。
+\section{原子化經驗萃取 Prompt 與輸出範例}
+\label{app:atomic-experience-distillation-prompt}
 
-\section{初始規劃提示詞}
-\label{app:initial-planning-prompt}
+\subsection*{System Prompt}
 
-【待補】整理初始規劃階段使用之提示詞，包含使用者任務、候選 API、規劃導向經驗與計畫格式限制。
+\begin{lstlisting}[
+    basicstyle=\ttfamily\fontsize{8.5}{10.5}\selectfont,
+    breaklines=true,
+    columns=fullflexible,
+    keepspaces=true,
+    showstringspaces=false,
+    frame=single
+]
+You are an AI agent methodology researcher. Your job is to distill train-dataset successful trajectories into reusable ATOMIC experiences.
 
-\section{錯誤分類與可行回饋提示詞}
+An atomic experience is NOT a full task recipe and NOT a skill. It should capture a reusable data-flow, target-set, constraint, or write-safety principle that can help future planners, retry planners, or recovery steps.
+
+Generate 0-2 high-quality atomic experiences from the evidence. Prefer 1. Generate 2 only if there are two clearly distinct reusable patterns. Prefer no experience over a task-specific or low-value one.
+
+Important constraints:
+- Do NOT summarize the full task workflow.
+- Do NOT produce one experience just because one task was shown.
+- Do NOT create a task-specific recipe like 'first call A, then call B'.
+- A good experience must name a reusable data-flow risk, the intermediate concepts needed to control it, and the read/write behavior it protects.
+- Reject generic engineering advice such as rate limits, concurrency, authentication, or pagination unless it is central to task correctness in the evidence.
+- Avoid full API call examples. Examples should illustrate data shapes, stable identifiers, or concept meaning.
+- Focus on transferable principles: target set provenance, batch completeness, process output contracts, write target guards, state comparison before writes, search/lookup result usage, or preserving existing content format.
+
+experience_type is a soft label. Prefer one of these broad labels when it fits: target_set_provenance, batch_completeness, process_output_contract, write_target_guard. If none fits, create a concise snake_case label.
+
+Keep each experience concise:
+- when_to_use: 1 sentence.
+- core_principle: 1 sentence.
+- required_intermediate_concepts: list only genuinely necessary concepts.
+- required_intermediate_concepts.name: lowercase snake_case only.
+- required_intermediate_concepts must be data-flow concepts the agent must preserve, name, pass forward, or check. They are NOT API names, operation names, tool names, or execution steps.
+- how_to_apply: 2-4 short bullets.
+- pitfalls: 2-4 short bullets.
+
+Return JSON with an 'experiences' array. Each experience must have exactly these keys: experience_type, source_task_id, source_task_goal, when_to_use, core_principle, required_intermediate_concepts, how_to_apply, pitfalls.
+\end{lstlisting}
+
+\subsection*{User Prompt 模板}
+
+\begin{lstlisting}[
+    basicstyle=\ttfamily\fontsize{8.5}{10.5}\selectfont,
+    breaklines=true,
+    columns=fullflexible,
+    keepspaces=true,
+    showstringspaces=false,
+    frame=single
+]
+Original Train Task:
+{task_instruction}
+
+Evidence Package:
+
+specs.json:
+{specs_json}
+
+public_data.json:
+{public_data_json}
+
+solution.py:
+{solution_py}
+
+evaluation.py:
+{evaluation_py}
+
+api_calls.json compacted (raw={api_calls_count}, compacted={api_calls_compacted_count}):
+{api_calls_compacted}
+
+Distill only reusable atomic experiences. If the evidence only supports a task-specific recipe, return an empty experiences list.
+\end{lstlisting}
+
+\subsection*{輸出 JSON Schema}
+
+\begin{lstlisting}[
+    basicstyle=\ttfamily\fontsize{8.5}{10.5}\selectfont,
+    breaklines=true,
+    columns=fullflexible,
+    keepspaces=true,
+    showstringspaces=false,
+    frame=single
+]
+{
+  "experiences": [
+    {
+      "experience_type": "string",
+      "source_task_id": "string",
+      "source_task_goal": "string",
+      "when_to_use": "string",
+      "core_principle": "string",
+      "required_intermediate_concepts": [
+        {
+          "name": "string",
+          "role": "string",
+          "example": "string"
+        }
+      ],
+      "how_to_apply": ["string"],
+      "pitfalls": ["string"]
+    }
+  ]
+}
+\end{lstlisting}
+
+\subsection*{實際輸出範例}
+
+\begin{lstlisting}[
+    basicstyle=\ttfamily\fontsize{8.5}{10.5}\selectfont,
+    breaklines=true,
+    columns=fullflexible,
+    keepspaces=true,
+    showstringspaces=false,
+    frame=single
+]
+{
+  "experience_type": "target_set_provenance",
+  "source_task_id": "82e2fac_2",
+  "source_task_goal": "What is the title of the least-played song in my Spotify song library.",
+  "when_to_use": "When collecting identifiers for a target set from multiple sources or paginated results that might contain duplicates.",
+  "core_principle": "Ensure the final set of identifiers used for subsequent operations is complete and unique, preventing redundant calls and ensuring all relevant data is processed.",
+  "required_intermediate_concepts": [
+    {
+      "name": "paginated_api_results",
+      "role": "The raw, potentially overlapping or incomplete list of items returned from paginated API calls.",
+      "example": "[{\"song_id\": \"s1\", \"name\": \"Song A\"}, {\"song_id\": \"s2\", \"name\": \"Song B\"}, {\"song_id\": \"s1\", \"name\": \"Song A\"}]"
+    },
+    {
+      "name": "extracted_identifiers",
+      "role": "A list of identifiers extracted from all items across all paginated results.",
+      "example": "[\"s1\", \"s2\", \"s1\"]"
+    },
+    {
+      "name": "unique_target_identifiers",
+      "role": "The final, deduplicated set of identifiers to be used for detailed fetching or processing.",
+      "example": "[\"s1\", \"s2\"]"
+    }
+  ],
+  "how_to_apply": [
+    "Use a robust pagination utility to ensure all data pages are retrieved.",
+    "Extract a stable identifier from each item across all retrieved pages.",
+    "Aggregate all extracted identifiers into a unique collection.",
+    "Use this unique set of identifiers for subsequent API calls to fetch detailed information."
+  ],
+  "pitfalls": [
+    "Failing to handle pagination, leading to an incomplete target set.",
+    "Not deduplicating identifiers, resulting in redundant API calls.",
+    "Extracting an unstable or non-unique identifier.",
+    "Assuming all items from different sources are distinct without explicit deduplication."
+  ]
+}
+\end{lstlisting}
+
+\section{錯誤分類與可行回饋 Prompt}
 \label{app:error-feedback-prompt}
 
-【待補】整理步驟失敗後用於產生暫定錯誤分類與可行回饋之提示詞，包含失敗步驟、失敗 API 資訊、原始錯誤訊息、相依資料脈絡與結構化失敗資訊。
+\subsection*{System Prompt}
 
-錯誤分類提示詞中使用之分類集合依模組概念整理如下：
+\begin{lstlisting}[
+    basicstyle=\ttfamily\fontsize{8.5}{10.5}\selectfont,
+    breaklines=true,
+    columns=fullflexible,
+    keepspaces=true,
+    showstringspaces=false,
+    frame=single
+]
+You are an advanced error analyst for an autonomous agent.
+Your task is to analyze the provided error message, the current step instruction, and the failed API information to:
+1. Classify the error into exactly one of the provided error categories.
+2. Generate specific, actionable feedback (repair instruction) to resolve the error.
 
-\begin{itemize}
-    \item \textbf{記憶相關：} \texttt{oversimplification}、\texttt{false\_memory}、\texttt{retrieval\_failure}。
-    \item \textbf{反思相關：} \texttt{progress\_misassessment}、\texttt{outcome\_misinterpretation}、\texttt{wrong\_causal\_attribution}、\texttt{reflection\_hallucination}。
-    \item \textbf{規劃相關：} \texttt{constraint\_ignorance}、\texttt{impossible\_plan}、\texttt{inefficient\_plan}。
-    \item \textbf{行動相關：} \texttt{plan\_misalignment}、\texttt{format\_error}、\texttt{parameter\_error}。
-    \item \textbf{系統相關：} \texttt{step\_limit\_reached}、\texttt{tool\_execution\_error}、\texttt{llm\_limitation}、\texttt{environment\_error}。
-    \item \textbf{驗證與其他：} \texttt{auth\_error}、\texttt{unknown}。
-\end{itemize}
+# Advanced Diagnostics (Rich Context)
+If 'Error Context' is provided, use it to perform deep diagnostics:
+- Missing Parameters: check 'current_memory_keys' in the context. If a missing parameter has a potential match in memory, explicitly suggest using that specific key in your feedback.
+- Candidate APIs: If 'suggested_apis' are present, verify if they align with the goal and suggest using them in your feedback.
+- Execution Errors:
+  - For any execution error, cross-reference the details with the params_used and the api_doc_snippet.
+  - Identify specifically if a parameter's type or value in params_used violates the requirements defined in api_doc_snippet.
+  - Look for discrepancies between the error message and the actual parameters provided.
 
-\section{局部修復策略選擇提示詞}
+# Error Taxonomy
+{error_taxonomy}
+
+# Output Format
+Return a JSON object:
+{
+  "category": "<one of the keys from taxonomy>",
+  "feedback": "<specific actionable instruction to fix this error>"
+}
+\end{lstlisting}
+
+\subsection*{User Prompt 模板}
+
+\begin{lstlisting}[
+    basicstyle=\ttfamily\fontsize{8.5}{10.5}\selectfont,
+    breaklines=true,
+    columns=fullflexible,
+    keepspaces=true,
+    showstringspaces=false,
+    frame=single
+]
+Current Step Instruction: {current_step_instruction}
+Failed API Info: {failed_api_info}
+Error Message: {error_message}
+Error Context (Rich Info): {error_context}
+\end{lstlisting}
+
+\subsection*{錯誤類型範圍}
+
+\begin{lstlisting}[
+    basicstyle=\ttfamily\fontsize{8.5}{10.5}\selectfont,
+    breaklines=true,
+    columns=fullflexible,
+    keepspaces=true,
+    showstringspaces=false,
+    frame=single
+]
+memory: oversimplification, false_memory, retrieval_failure
+reflection: progress_misassessment, outcome_misinterpretation, wrong_causal_attribution, reflection_hallucination
+planning: constraint_ignorance, impossible_plan, inefficient_plan
+action: plan_misalignment, format_error, parameter_error
+system: step_limit_reached, tool_execution_error, llm_limitation, environment_error
+verification/auth: auth_error, unknown
+\end{lstlisting}
+
+\subsection*{輸出 JSON Schema}
+
+\begin{lstlisting}[
+    basicstyle=\ttfamily\fontsize{8.5}{10.5}\selectfont,
+    breaklines=true,
+    columns=fullflexible,
+    keepspaces=true,
+    showstringspaces=false,
+    frame=single
+]
+{
+  "category": "string",
+  "feedback": "string"
+}
+\end{lstlisting}
+
+\section{局部修復策略選擇 Prompt}
 \label{app:repair-strategy-prompt}
 
-【待補】整理局部修復階段用於選擇修復 API、相依資料使用方式與插入、替換、刪除策略之提示詞。
+\subsection*{System Prompt 摘要}
 
-\section{重新規劃提示詞}
-\label{app:replanning-prompt}
+\begin{lstlisting}[
+    basicstyle=\ttfamily\fontsize{8.5}{10.5}\selectfont,
+    breaklines=true,
+    columns=fullflexible,
+    keepspaces=true,
+    showstringspaces=false,
+    frame=single
+]
+You are choosing ONE best API (or action) to attempt recovery from a failed step in a multi-step plan.
 
-【待補】整理重新規劃階段使用之提示詞，包含原始任務、既有計畫、失敗資訊、已完成步驟結果，以及規劃導向與修復導向經驗。
+You must:
+1. Read the originally failed step's objective, the failure message, and the intended repair action.
+2. Examine each candidate API.
+3. Pick the single most relevant API.
+   - If none are helpful, return chosen = "NONE".
+4. Determine keep_dependency for REPLACE or INSERT modes.
+5. Choose the plan edit mode and repair intent.
 
-\chapter*{附錄 B 程式碼}
-\phantomsection
-\addcontentsline{toc}{chapter}{附錄 B 程式碼}
+Repair intent:
+- MISSING_PREREQUISITE:
+  The selected API obtains missing prerequisite information or state needed before retrying the failed step, such as login, search, lookup, get, list, retrieve, or fetch.
 
-\setcounter{section}{0}
-\renewcommand{\thesection}{B.\arabic{section}}
-\renewcommand{\thesubsection}{\thesection.\arabic{subsection}}
-\renewcommand{\theHsection}{appendix.B.\arabic{section}}
-\renewcommand{\theHsubsection}{appendix.B.\arabic{section}.\arabic{subsection}}
+- COMPLETE_PARTIAL_EXECUTION:
+  The failed step is conceptually the right operation, but its parameters, target coverage, or repeated execution were incomplete.
 
-在此整理重要程式碼片段與關鍵實作說明。
+- CORRECT_WRONG_OPERATION:
+  The failed step uses the wrong API, wrong step type, wrong target, or wrong operation.
+
+- REMOVE_REDUNDANT_STEP:
+  The failed step is unnecessary, duplicate, harmful, or contradicted by new evidence.
+
+Mode decision rules:
+- For MISSING_PREREQUISITE, choose INSERT.
+- For COMPLETE_PARTIAL_EXECUTION, choose REPLACE.
+- For CORRECT_WRONG_OPERATION, choose REPLACE.
+- For REMOVE_REDUNDANT_STEP, choose DELETE.
+- Do not choose INSERT when the selected API and the failed step have the same operational goal; choose REPLACE instead.
+\end{lstlisting}
+
+\subsection*{User Prompt 模板}
+
+\begin{lstlisting}[
+    basicstyle=\ttfamily\fontsize{8.5}{10.5}\selectfont,
+    breaklines=true,
+    columns=fullflexible,
+    keepspaces=true,
+    showstringspaces=false,
+    frame=single
+]
+Originally Failed Step: {failed_step_text}
+Failure Message: {failure_msg}
+Repair Action: {actionable_feedback}
+Candidates: {candidate_apis}
+
+Failure Evidence:
+{
+  "error_code": "...",
+  "details": "...",
+  "api_name": "...",
+  "analysis_reason": "...",
+  "dependency_context": "...",
+  "call_experience": "..."
+}
+
+Historical Recovery Strategy:
+- Proven Recovery Strategy 1:
+  {retrieved_recovery_experience}
+- Proven Recovery Strategy 2:
+  {retrieved_recovery_experience}
+\end{lstlisting}
+
+\subsection*{輸出 JSON Schema}
+
+\begin{lstlisting}[
+    basicstyle=\ttfamily\fontsize{8.5}{10.5}\selectfont,
+    breaklines=true,
+    columns=fullflexible,
+    keepspaces=true,
+    showstringspaces=false,
+    frame=single
+]
+{
+  "chosen": "string",
+  "keep_dependency": true,
+  "mode": "INSERT | REPLACE | DELETE",
+  "repair_intent": "MISSING_PREREQUISITE | COMPLETE_PARTIAL_EXECUTION | CORRECT_WRONG_OPERATION | REMOVE_REDUNDANT_STEP"
+}
+\end{lstlisting}
+
+\section{規劃與重新規劃的經驗注入片段}
+\label{app:planning-replanning-experience-injection}
+
+\subsection*{Initial Planning 經驗注入}
+
+\begin{lstlisting}[
+    basicstyle=\ttfamily\fontsize{8.5}{10.5}\selectfont,
+    breaklines=true,
+    columns=fullflexible,
+    keepspaces=true,
+    showstringspaces=false,
+    frame=single
+]
+# Lessons Learned from Previous Tasks
+
+The following are retrieved experiences. Use them as compact guidance for clearer step context and safer data flow; do not copy them as task-specific recipes.
+
+If a lesson uses words such as set, collection, tuple, or object, treat them as semantic data-flow concepts unless it explicitly says otherwise. Process step final outputs must still be JSON-like dictionaries/lists, such as a list of unique IDs under a meaningful key, not Python set/tuple objects.
+
+- Strategic Lesson 1:
+{retrieved_atomic_experience}
+
+- Strategic Lesson 2:
+{retrieved_atomic_experience}
+
+- Strategic Lesson 3:
+{retrieved_atomic_experience}
+\end{lstlisting}
+
+\subsection*{Replanning 共用引導}
+
+\begin{lstlisting}[
+    basicstyle=\ttfamily\fontsize{8.5}{10.5}\selectfont,
+    breaklines=true,
+    columns=fullflexible,
+    keepspaces=true,
+    showstringspaces=false,
+    frame=single
+]
+# Case-Based Replan Guidance
+
+Use these retrieved lessons as hints when revising the failed plan. Planning lessons help restructure the workflow; recovery lessons help address the specific failure.
+
+If a lesson uses words such as set, collection, tuple, or object, treat them as semantic data-flow concepts unless it explicitly says otherwise. Process step final outputs must still be JSON-like dictionaries/lists, such as a list of unique IDs under a meaningful key, not Python set/tuple objects.
+\end{lstlisting}
+
+\subsection*{Planning／Recovery Lessons 注入區塊}
+
+\begin{lstlisting}[
+    basicstyle=\ttfamily\fontsize{8.5}{10.5}\selectfont,
+    breaklines=true,
+    columns=fullflexible,
+    keepspaces=true,
+    showstringspaces=false,
+    frame=single
+]
+## Planning Lessons
+
+- Planning Lesson 1 [id=P1] (source={source}, similarity={score}):
+{retrieved_planning_lesson}
+
+## Recovery Lessons
+
+- Recovery Lesson 1 [id=R1] (source={source}, similarity={score}):
+{retrieved_recovery_lesson}
+\end{lstlisting}

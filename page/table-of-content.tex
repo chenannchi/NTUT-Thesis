@@ -2,10 +2,26 @@
     \tableofcontents
 \end{TableOfContent}
 
+\makeatletter
 \begin{TableOfContent}
-    \listoffigures
+    \begingroup
+        \let\NTUTOriginalNumberline\numberline
+        \renewcommand{\numberline}[1]{%
+            \NTUTOriginalNumberline{\figurename\enspace #1}%
+        }
+        \renewcommand*\l@figure{\@dottedtocline{1}{1.5em}{3.8em}}
+        \listoffigures
+    \endgroup
 \end{TableOfContent}
 
 \begin{TableOfContent}
-    \listoftables
+    \begingroup
+        \let\NTUTOriginalNumberline\numberline
+        \renewcommand{\numberline}[1]{%
+            \NTUTOriginalNumberline{\tablename\enspace #1}%
+        }
+        \renewcommand*\l@table{\@dottedtocline{1}{1.5em}{3.8em}}
+        \listoftables
+    \endgroup
 \end{TableOfContent}
+\makeatother

@@ -83,7 +83,7 @@
     \end{tabularx}
 \end{table}
 
-除上述執行環境外，實驗亦需固定語言模型、推論溫度、執行預算、經驗檢索設定與局部修復限制等主要控制項。表 \ref{tab:experiment_environment} 列出本研究實驗中需要固定或比較的重點設定。
+除上述執行環境外，實驗亦需固定語言模型、推論溫度、執行預算、經驗檢索設定與局部修復限制等主要控制項。本研究採用 Gemini 2.5 Flash 作為大型語言模型 \cite{geminiteam2025gemini25}；表 \ref{tab:experiment_environment} 列出本研究實驗中需要固定或比較的重點設定。
 
 \begin{table}[htbp]
     \centering
@@ -117,7 +117,7 @@
 
 本節對應 RQ1，目的在於呈現 CBR-APIKGAgent 在 AppWorld \texttt{test\_normal} 上的整體任務完成率，並與既有方法進行比較。本實驗使用完整 \texttt{test\_normal} 168 個任務作為評估範圍，並依 AppWorld 官方評估結果計算 TGC 與 SGC。若任務執行後未產生完整評估報告或出現異常執行情形，該任務在統計中計為失敗。
 
-為呈現本研究方法於 AppWorld 基準中的相對位置，表 \ref{tab:overall_performance} 列出既有方法於 \texttt{test\_normal} 上的結果。比較對象包含 ReAct \cite{yao2023react}、PlanExec \cite{wang2023planandsolve}、FullCodeRefl \cite{shinn2023reflexion}、IPFunCall \cite{trivedi2024appworld}，以及 LOOP \cite{chen2025loop}、IBM CUGA \cite{marreed2025towards}、ReAct + 2 SetBSR Demos \cite{gupta2025leveraging} 與 APIKGAgent \cite{wu2025apikgagent}。其中，AppWorld 原始 baseline 數據取自 AppWorld 原論文 \cite{trivedi2024appworld}；其餘方法數據主要取自各方法原論文與 AppWorld 官方 leaderboard \cite{appworld_leaderboard}，其中 leaderboard 數據以 2026 年 7 月 4 日存取結果為準。由於不同方法可能採用不同模型、示範資料、訓練策略或執行預算，因此本表主要作為 benchmark 相對表現參考，而非嚴格控制變因下的直接比較。
+為呈現本研究方法於 AppWorld 基準中的相對位置，表 \ref{tab:overall_performance} 列出既有方法於 \texttt{test\_normal} 上的結果。比較對象包含 ReAct \cite{yao2023react}，以及 AppWorld 所定義的 PlanExec、FullCodeRefl 與 IPFunCall 基線 \cite{trivedi2024appworld}；其餘方法包括 LOOP \cite{chen2025loop}、IBM CUGA \cite{marreed2025towards}、ReAct + 2 SetBSR Demos \cite{gupta2025leveraging} 與 APIKGAgent \cite{wu2025apikgagent}。其中，AppWorld 原始 baseline 數據取自 AppWorld 原論文 \cite{trivedi2024appworld}；其餘方法數據主要取自各方法原論文與 AppWorld 官方 leaderboard \cite{appworld_leaderboard}，其中 leaderboard 數據以 2026 年 7 月 13 日存取結果為準。由於不同方法可能採用不同模型、示範資料、訓練策略或執行預算，因此本表主要作為 benchmark 相對表現參考，而非嚴格控制變因下的直接比較。
 
 \begin{table}[htbp]
     \centering

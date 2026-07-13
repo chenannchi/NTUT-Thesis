@@ -16,6 +16,7 @@
 \usepackage[backend=bibtex,style=ieee,sorting=none]{biblatex}
 \usepackage{tabularx}
 \usepackage{multirow}
+\usepackage{listings}
 \usepackage{csquotes}
 \usepackage{subcaption}
 \usepackage[ruled,vlined,linesnumbered]{algorithm2e}
@@ -40,7 +41,12 @@
 
 % 中文碩士論文：作者，粗體論文名稱，文章種類，所屬學校，年份。
 \DeclareFieldFormat[thesis]{title}{\mkbibbold{#1}}
-\DeclareFieldFormat[thesis]{url}{\url{#1}}
+% IEEE 文獻（網址結尾除外）應以句點結束，包含以 DOI 結尾者。
+\DeclareFieldFormat{doi}{%
+  \mkbibacro{DOI}\addcolon\space
+  \ifhyperref
+    {\href{https://doi.org/#1}{\nolinkurl{#1}}}
+    {\nolinkurl{#1}}}
 \DeclareBibliographyDriver{thesis}{%
   \usebibmacro{bibindex}%
   \usebibmacro{begentry}%
@@ -53,9 +59,28 @@
   \printlist{institution}%
   \setunit{\printtext{，}}%
   \printfield{year}%
-  \setunit{\printtext{。}\space}%
-  \usebibmacro{url+urldate}%
-  \usebibmacro{finentry}}
+  \begingroup
+  \renewcommand*{\finentrypunct}{。}%
+  \usebibmacro{finentry}%
+  \endgroup}
+
+% 線上文獻：網址前統一標示 [Online; accessed DD-Month-YYYY]。
+\newcommand*{\NTUTAccessMonth}[1]{%
+  \ifcase#1\relax
+  \or January\or February\or March\or April\or May\or June%
+  \or July\or August\or September\or October\or November\or December%
+  \fi}
+\DeclareFieldFormat{url}{Available\addcolon\space\url{#1}\nopunct}
+\renewbibmacro*{url+urldate}{%
+  \iffieldundef{url}
+    {}
+    {\iffieldundef{urlyear}
+       {\printtext{[Online]}}
+       {\printtext{[Online\addsemicolon\space accessed \thefield{urlday}-%
+          \NTUTAccessMonth{\thefield{urlmonth}}-%
+          \thefield{urlyear}]}}%
+     \setunit{\adddot\space}%
+     \printfield{url}}}
 
 \input{ntut-labels.tex}
 
