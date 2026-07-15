@@ -19,6 +19,7 @@
 \usepackage{listings}
 \usepackage{csquotes}
 \usepackage{subcaption}
+\usepackage{float}
 \usepackage[ruled,vlined,linesnumbered]{algorithm2e}
 
 \MakeAutoQuote{“}{”}
@@ -39,9 +40,11 @@
 \pagestyle{plain} % 頁碼
 \addbibresource{reference.bib}
 
-% 中文碩士論文：作者，粗體論文名稱，文章種類，所屬學校，年份。
-\DeclareFieldFormat[thesis]{title}{\mkbibbold{#1}}
+% 中文碩士論文：作者，論文名稱，文章種類，所屬學校，年份。
+\DeclareFieldFormat[thesis]{title}{#1}
 % IEEE 文獻（網址結尾除外）應以句點結束，包含以 DOI 結尾者。
+% 頁碼不加入千分位分組空格。
+\DeclareFieldFormat{pages}{\mkpageprefix[bookpagination]{#1}}
 \DeclareFieldFormat{doi}{%
   \mkbibacro{DOI}\addcolon\space
   \ifhyperref
@@ -96,9 +99,6 @@
 
 % 封面、要浮水印 Cover with a watermark
 \input{page/titlepage.tex}
-% 「學位論文口試委員會審定書」掃描檔，請檢附完整簽名之審定書掃描檔
-% Please add "Oral Defense Committee Signature Form" with complete signatures.
-\includepdf[pages=-]{static-page/signpage.pdf}
 
 \pagenumbering{roman}
 
