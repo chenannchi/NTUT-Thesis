@@ -43,20 +43,22 @@
 依據 AppWorld 官方評估方式，AppWorld 採用程式化且以最終狀態為基礎的 evaluation tests 判斷任務是否完成，並以任務目標完成率（Task Goal Completion, TGC）與情境目標完成率（Scenario Goal Completion, SGC）作為主要指標 \cite{trivedi2024appworld}。
 
 \begin{enumerate}
-    \item \textbf{任務目標完成率（TGC）：}TGC 表示通過所有 AppWorld evaluation tests 的任務比例。對於單一任務而言，只有當該任務的所有評估測試皆通過時，該任務才計為成功。其計算方式如下：
+    \item \textbf{任務目標完成率（TGC）：}TGC 表示通過所有 AppWorld evaluation tests 的任務比例。對於單一任務而言，只有當該任務的所有評估測試皆通過時，該任務才計為成功。其計算方式如式 \ref{eq:tgc} 所示：
 
-    \[
+    \begin{equation}
         \mathrm{TGC} = \frac{N_{\mathrm{success}}}{N_{\mathrm{total}}} \times 100\%
-    \]
+        \label{eq:tgc}
+    \end{equation}
 
     其中，\(N_{\mathrm{success}}\) 代表通過所有 evaluation tests 的任務數量，\(N_{\mathrm{total}}\) 代表評估任務總數。
 
     \item \textbf{情境目標完成率（SGC）：}
-    SGC 以 AppWorld 的 task scenario 為單位計算。只有同一 scenario 產生之所有任務皆通過 evaluation tests 時，該 scenario 才計為成功。此指標用於衡量代理人是否能在同一任務情境的不同需求與初始狀態變化下穩定完成目標。其計算方式如下：
+    SGC 以 AppWorld 的 task scenario 為單位計算。只有同一 scenario 產生之所有任務皆通過 evaluation tests 時，該 scenario 才計為成功。此指標用於衡量代理人是否能在同一任務情境的不同需求與初始狀態變化下穩定完成目標。其計算方式如式 \ref{eq:sgc} 所示：
 
-    \[
+    \begin{equation}
         \mathrm{SGC} = \frac{N_{\mathrm{success\ scenarios}}}{N_{\mathrm{total\ scenarios}}} \times 100\%
-    \]
+        \label{eq:sgc}
+    \end{equation}
 \end{enumerate}
 
 \subsection{實驗環境與主要控制設定}
@@ -101,15 +103,15 @@
         \textbf{項目} & \textbf{設定} \\
         \hline
         大型語言模型 & \texttt{gemini-2.5-flash} \\
-        溫度參數 & 一般判斷：0；規劃與重新規劃：0.2；執行推論：0.2；API 候選評估：0.1 \\
-        任務執行時間限制 & 3600 秒 / 題 \\
-        執行流程內重新嘗試上限 & 3 次 / 題 \\
-        局部修復上限 & 3 次 / 原始失敗步驟 \\
-        修復鏈深度上限 & 2 個修復步驟 / 原始失敗步驟 \\
+        溫度參數 & 判斷 0；規劃、重新規劃與執行 0.2；API 評估 0.1 \\
+        任務執行時間限制 & 3600 秒／題 \\
+        執行流程內重新嘗試上限 & 3 次／題 \\
+        局部修復上限 & 3 次／原始失敗步驟 \\
+        修復鏈深度上限 & 2 步驟／原始失敗步驟 \\
         經驗檢索相似度門檻 & 0.35 \\
-        初始規劃經驗檢索 & 規劃導向經驗至多 3 筆 \\
-        重新規劃經驗檢索 & 規劃導向經驗至多 1 筆；修復導向經驗至多 1 筆 \\
-        局部修復經驗檢索 & 修復導向經驗至多 2 筆 \\
+        初始規劃經驗檢索 & 規劃導向至多 3 筆 \\
+        重新規劃經驗檢索 & 規劃導向至多 1 筆；修復導向至多 1 筆 \\
+        局部修復經驗檢索 & 修復導向至多 2 筆 \\
         \hline
     \end{tabularx}
 \end{table}
@@ -158,7 +160,7 @@
     \end{tabularx}
 \end{table}
 
-由表 \ref{tab:overall_performance} 可知，CBR-APIKGAgent 於 \texttt{test\_normal} 上達成 51.8\% 的 TGC 與 35.7\% 的 SGC。在表中採用 Gemini 2.5 Flash 的方法裡，本研究方法之兩項指標皆為最高，並高於同模型的 ReAct、FullCodeRefl 與 APIKGAgent；但與 IBM CUGA 及 LOOP 等使用不同模型、示範資料或訓練策略的方法相比仍有差距。因此，針對 RQ1，本實驗顯示 CBR-APIKGAgent 改善了相同模型條件下的整體任務完成表現，但尚未達到 AppWorld 公開結果中的最佳水準。至於兩項核心機制各自的貢獻，將於下一節透過消融實驗進一步分析。
+由表 \ref{tab:overall_performance} 可知，CBR-APIKGAgent 於 \texttt{test\_normal} 上達成 51.8\% 的 TGC 與 35.7\% 的 SGC。在表中採用 Gemini 2.5 Flash 的方法裡，本研究方法之兩項指標皆為最高，並高於同模型的 ReAct、FullCodeRefl 與 APIKGAgent；但與 IBM CUGA 及 LOOP 等使用不同模型的方法相比仍有差距。因此，本表主要用於呈現不同方法在 AppWorld benchmark 中的相對位置；針對 RQ1，本實驗顯示 CBR-APIKGAgent 在相同模型條件下改善了整體任務完成表現，但尚未達到 AppWorld 公開結果中的最佳水準。至於兩項核心機制各自的貢獻，將於下一節透過消融實驗進一步分析。
 
 \section{實驗二：消融實驗與案例分析}
 
