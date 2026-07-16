@@ -14,7 +14,7 @@
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.82\textwidth]{figures/chapter3/cbr_apikgagent_architecture.png}
+    \includegraphics[width=0.95\textwidth]{figures/chapter3/cbr_apikgagent_architecture.png}
     \caption{CBR-APIKGAgent 系統架構圖}
     \label{fig:cbr_apikgagent_architecture}
 \end{figure}
@@ -255,6 +255,7 @@ CBR-APIKGAgent 在多步驟 API 代理人架構中加入原子化經驗重用與
         \item \textbf{使用視角：}此階段同時使用規劃導向與修復導向經驗。
         \item \textbf{設計目的：}重新規劃需同時回應原始任務需求與已發生的失敗，因此需兼顧任務結構層面的規劃經驗，以及錯誤情境層面的修復經驗。
     \end{itemize}
+
 \end{enumerate}
 
 整體而言，原子化經驗重用機制提供的是可依不同決策情境檢索的案例式知識，而非固定規則或保證正確的修復模板。
@@ -318,6 +319,17 @@ P = \langle S_1, S_2, \ldots, S_k^{fail}, \ldots, S_n \rangle
         \item \textbf{使用原則：}插入策略的重點在於保留原失敗步驟的角色。新增步驟應用於補足資料或建立前置條件；若候選 API 與原步驟具有相同操作目的，則不應以插入方式加入，以避免同一操作被重複執行，進而造成資料狀態被重複修改或與任務目標不一致。
     \end{itemize}
 
+    上述 INSERT 的計畫變化可由圖 \ref{fig:local_repair_insert_example} 的簡化情境表示。
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.88\textwidth]{figures/chapter3/insert.png}
+        \caption{INSERT：補足前置狀態的局部計畫修復示意圖}
+        \label{fig:local_repair_insert_example}
+    \end{figure}
+
+    此例中，系統原本直接查詢已送出的付款請求，並接續篩選符合條件的請求；然而，查詢步驟因尚未登入 Venmo 而失敗。由於原查詢步驟仍是完成任務所需的操作，系統不刪除或替換該步驟，而是在其前方插入登入步驟。此例說明 INSERT 適用於原步驟仍需執行，但缺少必要前置資料或狀態的情況。
+
     \item \textbf{替換步驟（Replace）}
 
     \begin{itemize}
@@ -335,6 +347,17 @@ P = \langle S_1, S_2, \ldots, S_k^{fail}, \ldots, S_n \rangle
         \item \textbf{使用原則：}替換策略的目的並非改變原計畫的任務語意，而是以另一種方式完成原失敗步驟的局部目標。由於替換可能影響後續資料流，系統僅在失敗證據支持原步驟不宜再次執行時採用此策略，並傾向保留原步驟的相依資料；若候選 API 僅能提供前置或輔助資料，則不應直接取代原步驟。
     \end{itemize}
 
+    上述 REPLACE 的計畫變化可由圖 \ref{fig:local_repair_replace_example} 的簡化情境表示。
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.88\textwidth]{figures/chapter3/replace.png}
+        \caption{REPLACE：補足未完整執行操作的局部計畫修復示意圖}
+        \label{fig:local_repair_replace_example}
+    \end{figure}
+
+    此例中，系統原本在取得推薦歌曲後嘗試加入 30 首歌曲，但實際僅完成其中 25 首。由於原局部目標仍需完成，而剩餘歌曲已可由既有執行結果辨識，系統以「加入其餘 5 首推薦歌曲」取代原步驟，再接續進行隨機排序與播放。此例說明 REPLACE 適用於原步驟的局部目標仍需完成，但原操作方式、範圍或參數不適當的情況。
+
     \item \textbf{刪除步驟（Delete）}
 
     \begin{itemize}
@@ -351,6 +374,18 @@ P = \langle S_1, S_2, \ldots, S_k^{fail}, \ldots, S_n \rangle
 
         \item \textbf{使用原則：}刪除策略主要處理計畫結構上的銜接，並不額外產生被刪除步驟原本可能提供的資料。因此，若後續執行過程顯示刪除造成必要資料不足，該失敗仍需透過後續局部修復或重新規劃處理。
     \end{itemize}
+
+    上述 DELETE 的計畫變化可由圖 \ref{fig:local_repair_delete_example} 的簡化情境表示。
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.95\textwidth]{figures/chapter3/delete.png}
+        \caption{DELETE：移除不需執行步驟的局部計畫修復示意圖}
+        \label{fig:local_repair_delete_example}
+    \end{figure}
+
+    此例中，系統先取得手機好友與 Venmo 好友；若比對結果顯示待刪清單為空，則移除好友步驟沒有可操作目標，保留該步驟反而可能造成不必要的 API 呼叫或參數錯誤。因此，系統直接刪除該步驟，讓前後步驟銜接至新增缺少好友的後續操作。此例說明 DELETE 適用於原步驟已無需執行，或其操作目標集合為空的情況；DELETE 不新增替代步驟，而是將原步驟自計畫中移除。
+
 \end{enumerate}
 
 整體而言，上述公式描述的是計畫序列層級的變化；實際執行時，系統仍需維持前後步驟與資料依賴關係的一致性。對應演算法 \ref{alg:cbr_apikgagent_overall}，當 \(P_{\mathrm{repair}}\) 產生後，系統會以其更新目前計畫 \(P\)，並透過 \(\operatorname{SetNextStepToRepairPoint}(P)\) 將後續執行位置調整至修復後計畫中需要接續執行的位置。若後續執行仍出現資料不足或目標不符，系統會再依當前失敗狀態進入局部修復或重新規劃流程。

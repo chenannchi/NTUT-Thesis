@@ -1,0 +1,25 @@
+Replanning 共用引導
+# Case-Based Replan Guidance
+
+Use these retrieved lessons as hints when revising the failed plan. Planning lessons help restructure
+the workflow; recovery lessons help address the specific failure.
+
+If a lesson uses words such as set, collection, tuple, or object, treat them as semantic data-flow
+concepts unless it explicitly says otherwise. Process step final outputs must still be JSON-like
+dictionaries/lists, such as a list of unique IDs under a meaningful key, not Python set/tuple
+objects.
+
+Planning ／ Recovery Lessons 注入區塊
+## Planning Lessons
+
+- Planning Lesson 1 [id=P1] (source={source}, similarity={score}):
+{retrieved_planning_lesson}
+
+## Recovery Lessons
+
+- Recovery Lesson 1 [id=R1] (source={source}, similarity={score}):
+{retrieved_recovery_lesson}
+
+63
+
+

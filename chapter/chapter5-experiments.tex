@@ -119,7 +119,7 @@
 
 本節對應 RQ1，目的在於呈現 CBR-APIKGAgent 在 AppWorld \texttt{test\_normal} 上的整體任務完成率，並與既有方法進行比較。本實驗使用完整 \texttt{test\_normal} 168 個任務作為評估範圍，並依 AppWorld 官方評估結果計算 TGC 與 SGC。若任務執行後未產生完整評估報告或出現異常執行情形，該任務在統計中計為失敗。
 
-為呈現本研究方法於 AppWorld 基準中的相對位置，表 \ref{tab:overall_performance} 列出既有方法於 \texttt{test\_normal} 上的結果。比較對象包含 ReAct \cite{yao2023react}，以及 AppWorld 所定義的 PlanExec、FullCodeRefl 與 IPFunCall 基線，其方法與數據取自 AppWorld 原論文 \cite{trivedi2024appworld}；其餘方法包括 LOOP \cite{chen2025loop}、IBM CUGA \cite{marreed2025towards}、ReAct + 2 SetBSR Demos \cite{gupta2025leveraging} 與 APIKGAgent \cite{wu2025apikgagent}，相關數據主要取自各方法原論文與 AppWorld 官方 leaderboard \cite{appworld_leaderboard}，其中 leaderboard 數據以 2026 年 7 月 13 日存取結果為準。LOOP 於表中採用官方 leaderboard 登載之 72.6\% TGC 與 53.6\% SGC；其原始論文則報告五次評估之平均結果 71.3 $\pm$ 1.3\% 與 53.6 $\pm$ 2.2\%，兩者屬不同統計紀錄，本表以前者作為公開 leaderboard 比較值。由於不同方法可能採用不同模型、示範資料、訓練策略或執行預算，因此本表主要作為 benchmark 相對表現參考，而非嚴格控制變因下的直接比較。
+為呈現本研究方法於 AppWorld 基準中的相對位置，表 \ref{tab:overall_performance} 列出既有方法於 \texttt{test\_normal} 上的結果。比較對象包含 ReAct \cite{yao2023react}，以及 AppWorld 所定義的 PlanExec、FullCodeRefl 與 IPFunCall 基線，其方法與數據取自 AppWorld 原論文 \cite{trivedi2024appworld}；其餘方法包括 LOOP \cite{chen2025loop}、IBM CUGA \cite{marreed2025towards} 與 APIKGAgent \cite{wu2025apikgagent}，相關數據主要取自各方法原論文與 AppWorld 官方 leaderboard \cite{appworld_leaderboard}，其中 leaderboard 數據以 2026 年 7 月 13 日存取結果為準。LOOP 於表中採用官方 leaderboard 登載之 72.6\% TGC 與 53.6\% SGC；其原始論文則報告五次評估之平均結果 71.3 $\pm$ 1.3\% 與 53.6 $\pm$ 2.2\%，兩者屬不同統計紀錄，本表以前者作為公開 leaderboard 比較值。由於不同方法可能採用不同模型、示範資料、訓練策略或執行預算，因此本表主要作為 benchmark 相對表現參考，而非嚴格控制變因下的直接比較。
 
 \begin{table}[htbp]
     \centering
@@ -128,30 +128,29 @@
     \small
     \renewcommand{\arraystretch}{1.15}
     \begin{tabularx}{0.92\textwidth}{
-        >{\raggedright\arraybackslash}p{0.2\textwidth}
+        >{\raggedright\arraybackslash}l
         >{\raggedright\arraybackslash}X
-        >{\centering\arraybackslash}p{0.14\textwidth}
-        >{\centering\arraybackslash}p{0.14\textwidth}
+        >{\centering\arraybackslash}c
+        >{\centering\arraybackslash}c
     }
         \hline
-        \textbf{模型} & \textbf{方法} & \textbf{TGC (\%)} & \textbf{SGC (\%)} \\
+        \textbf{Model} & \textbf{Method} & \textbf{TGC (\%)} & \textbf{SGC (\%)} \\
         \hline
-        \multirow{5}{=}{GPT-4o} & ReAct & 48.8 & 32.1 \\
-        & ReAct + 2 SetBSR Demos & 68.5 & 57.1 \\
+        \multirow{4}{*}{GPT-4o} & ReAct & 48.8 & 32.1 \\
         & PlanExec & 44.6 & 23.2 \\
         & FullCodeRefl & 33.9 & 26.8 \\
         & IPFunCall & 32.1 & 16.1 \\
         \hline
         GPT-4.1 & IBM CUGA & 73.2 & 62.5 \\
         \hline
-        \multirow{3}{=}{LLaMA3-70B} & ReAct & 20.8 & 8.9 \\
+        \multirow{3}{*}{LLaMA3-70B} & ReAct & 20.8 & 8.9 \\
         & PlanExec & 8.9 & 1.8 \\
         & FullCodeRefl & 24.4 & 17.9 \\
         \hline
-        \multirow{2}{=}{Qwen2.5-32B} & ReAct & 39.2 & 18.6 \\
+        \multirow{2}{*}{Qwen2.5-32B} & ReAct & 39.2 & 18.6 \\
         & LOOP & 72.6 & 53.6 \\
         \hline
-        \multirow{4}{=}{Gemini 2.5 Flash} & ReAct & 50.6 & 28.6 \\
+        \multirow{4}{*}{Gemini 2.5 Flash} & ReAct & 50.6 & 28.6 \\
         & FullCodeRefl & 36.9 & 26.8 \\
         & APIKGAgent & 41.7 & 17.9 \\
         & \textbf{CBR-APIKGAgent} & \textbf{51.8} & \textbf{35.7} \\
@@ -159,7 +158,7 @@
     \end{tabularx}
 \end{table}
 
-由表 \ref{tab:overall_performance} 可知，CBR-APIKGAgent 於 \texttt{test\_normal} 上達成 51.8\% 的 TGC 與 35.7\% 的 SGC。在表中採用 Gemini 2.5 Flash 的方法裡，本研究方法之兩項指標皆為最高，並高於同模型的 ReAct、FullCodeRefl 與 APIKGAgent；但與 IBM CUGA、LOOP 及 ReAct + 2 SetBSR Demos 等使用不同模型、示範資料或訓練策略的方法相比仍有差距。因此，針對 RQ1，本實驗顯示 CBR-APIKGAgent 改善了相同模型條件下的整體任務完成表現，但尚未達到 AppWorld 公開結果中的最佳水準。至於兩項核心機制各自的貢獻，將於下一節透過消融實驗進一步分析。
+由表 \ref{tab:overall_performance} 可知，CBR-APIKGAgent 於 \texttt{test\_normal} 上達成 51.8\% 的 TGC 與 35.7\% 的 SGC。在表中採用 Gemini 2.5 Flash 的方法裡，本研究方法之兩項指標皆為最高，並高於同模型的 ReAct、FullCodeRefl 與 APIKGAgent；但與 IBM CUGA 及 LOOP 等使用不同模型、示範資料或訓練策略的方法相比仍有差距。因此，針對 RQ1，本實驗顯示 CBR-APIKGAgent 改善了相同模型條件下的整體任務完成表現，但尚未達到 AppWorld 公開結果中的最佳水準。至於兩項核心機制各自的貢獻，將於下一節透過消融實驗進一步分析。
 
 \section{實驗二：消融實驗與案例分析}
 
@@ -172,24 +171,24 @@
 \subsection{消融實驗結果}
 
 正式消融實驗結果如表 \ref{tab:ablation_results} 所示。四種設定皆使用相同任務集合，並以 TGC 與 SGC 作為比較指標。
-\begin{table}[htbp]
+\begin{table}[H]
     \centering
     \caption{消融實驗結果}
     \label{tab:ablation_results}
     \small
     \renewcommand{\arraystretch}{1.15}
-    \begin{tabularx}{0.58\textwidth}{
+    \begin{tabularx}{0.68\textwidth}{
         >{\raggedright\arraybackslash}X
         >{\centering\arraybackslash}p{0.14\textwidth}
         >{\centering\arraybackslash}p{0.14\textwidth}
     }
         \hline
-        \textbf{設定} & \textbf{TGC (\%)} & \textbf{SGC (\%)} \\
+        \textbf{Configuration} & \textbf{TGC (\%)} & \textbf{SGC (\%)} \\
         \hline
-        完整系統 & 51.8 & 35.7 \\
-        僅局部修復 & 49.4 & 28.6 \\
-        僅原子化經驗 & 43.5 & 25.0 \\
-        基礎系統 & 37.5 & 14.3 \\
+        Baseline System & 37.5 & 14.3 \\
+        Atomic Experience Only & 43.5 & 25.0 \\
+        Local Repair Only & 49.4 & 28.6 \\
+        Full System & \textbf{51.8} & \textbf{35.7} \\
         \hline
     \end{tabularx}
 \end{table}
