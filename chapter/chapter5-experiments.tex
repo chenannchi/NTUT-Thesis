@@ -121,7 +121,7 @@
 
 本節對應 RQ1，目的在於呈現 CBR-APIKGAgent 在 AppWorld \texttt{test\_normal} 上的整體任務完成率，並與既有方法進行比較。本實驗使用完整 \texttt{test\_normal} 168 個任務作為評估範圍，並依 AppWorld 官方評估結果計算 TGC 與 SGC。若任務執行後未產生完整評估報告或出現異常執行情形，該任務在統計中計為失敗。
 
-為呈現本研究方法於 AppWorld 基準中的相對位置，表 \ref{tab:overall_performance} 列出既有方法於 \texttt{test\_normal} 上的結果。比較對象包含 ReAct \cite{yao2023react}，以及 AppWorld 所定義的 PlanExec、FullCodeRefl 與 IPFunCall 基線，其方法與數據取自 AppWorld 原論文 \cite{trivedi2024appworld}；其餘方法包括 LOOP \cite{chen2025loop}、IBM CUGA \cite{marreed2025towards} 與 APIKGAgent \cite{wu2025apikgagent}，相關數據主要取自各方法原論文與 AppWorld 官方 leaderboard \cite{appworld_leaderboard}，其中 leaderboard 數據以 2026 年 7 月 13 日存取結果為準。LOOP 於表中採用官方 leaderboard 登載之 72.6\% TGC 與 53.6\% SGC；其原始論文則報告五次評估之平均結果 71.3 $\pm$ 1.3\% 與 53.6 $\pm$ 2.2\%，兩者屬不同統計紀錄，本表以前者作為公開 leaderboard 比較值。由於不同方法可能採用不同模型、示範資料、訓練策略或執行預算，因此本表主要作為 benchmark 相對表現參考，而非嚴格控制變因下的直接比較。
+為呈現本研究方法於 AppWorld 基準中的相對位置，表 \ref{tab:overall_performance} 列出既有方法於 \texttt{test\_normal} 上的結果。比較對象包含 ReAct \cite{yao2023react}，以及 AppWorld 所定義的 PlanExec、FullCodeRefl 與 IPFunCall 基線，其方法與數據取自 AppWorld 原論文 \cite{trivedi2024appworld}；其餘方法包括 LOOP \cite{chen2025loop}、IBM CUGA \cite{shlomov2026benchmarks} 與 APIKGAgent \cite{wu2025apikgagent}，相關數據主要取自各方法原論文與 AppWorld 官方 leaderboard \cite{appworld_leaderboard}，其中 leaderboard 數據以 2026 年 7 月 13 日存取結果為準。LOOP 於表中採用官方 leaderboard 登載之 72.6\% TGC 與 53.6\% SGC；其原始論文則報告五次評估之平均結果 71.3 $\pm$ 1.3\% 與 53.6 $\pm$ 2.2\%，兩者屬不同統計紀錄，本表以前者作為公開 leaderboard 比較值。由於不同方法可能採用不同模型、示範資料、訓練策略或執行預算，因此本表主要作為 benchmark 相對表現參考，而非嚴格控制變因下的直接比較。
 
 \begin{table}[htbp]
     \centering
@@ -160,7 +160,11 @@
     \end{tabularx}
 \end{table}
 
-由表 \ref{tab:overall_performance} 可知，CBR-APIKGAgent 於 \texttt{test\_normal} 上達成 51.8\% 的 TGC 與 35.7\% 的 SGC。在表中採用 Gemini 2.5 Flash 的方法裡，本研究方法之兩項指標皆為最高，並高於同模型的 ReAct、FullCodeRefl 與 APIKGAgent；但與 IBM CUGA 及 LOOP 等使用不同模型的方法相比仍有差距。因此，本表主要用於呈現不同方法在 AppWorld benchmark 中的相對位置；針對 RQ1，本實驗顯示 CBR-APIKGAgent 在相同模型條件下改善了整體任務完成表現，但尚未達到 AppWorld 公開結果中的最佳水準。至於兩項核心機制各自的貢獻，將於下一節透過消融實驗進一步分析。
+由表 \ref{tab:overall_performance} 可知，CBR-APIKGAgent 於 \texttt{test\_normal} 上達成 51.8\% 的 TGC 與 35.7\% 的 SGC。在表中採用 Gemini 2.5 Flash 的方法裡，本研究方法之兩項指標皆為最高，並高於同模型的 ReAct、FullCodeRefl 與 APIKGAgent；但與 LOOP 及 IBM CUGA 相比仍有差距。
+
+從方法設計來看，LOOP 透過強化學習直接在 AppWorld 環境中調整代理人的行為，使 API 文件查閱、行動選擇與錯誤恢復策略反映於模型的互動行為；本研究則不調整模型權重，而是在推論階段檢索原子化經驗，並將其加入規劃與修復脈絡以引導模型重用既有策略。因此，本研究方法的效果仍會受到經驗檢索結果、任務限制契合度及模型對經驗內容之理解所影響，此項學習方式的差異可能是 LOOP 取得較高完成率的原因之一。另一方面，CUGA 採用階層式規劃器與執行器架構，由持久化任務紀錄維持步驟、變數綁定與重新規劃狀態，再將子任務交由專用代理人處理；本研究則著重於在 APIKGAgent 流程中加入經驗重用與失敗後的局部修復。從本研究的限制案例可觀察到，當任務涉及多階段資料篩選或搜尋候選結果時，原始任務條件與後續操作目標之間的對應仍可能產生偏差，因此，跨步驟狀態維持方式的差異可能是 CUGA 取得較高完成率的原因之一。
+
+然而，LOOP、CUGA 與本研究使用的基礎模型、學習方式及執行架構並不相同，本研究亦未在相同模型與執行預算下重現上述方法。因此，前述差異應視為根據各方法設計與本研究案例觀察提出的可能解釋，尚不能直接判定為效能差距的單一原因。針對 RQ1，本實驗顯示 CBR-APIKGAgent 在相同模型條件下改善了整體任務完成表現，但尚未達到 AppWorld 公開結果中的最佳水準。至於兩項核心機制各自的貢獻，將於下一節透過消融實驗進一步分析。
 
 \section{實驗二：消融實驗與案例分析}
 
@@ -172,8 +176,9 @@
 
 \subsection{消融實驗結果}
 
-正式消融實驗結果如表 \ref{tab:ablation_results} 所示。四種設定皆使用相同任務集合，並以 TGC 與 SGC 作為比較指標。
-\begin{table}[H]
+正式消融實驗以基礎系統作為比較基準，分別加入原子化經驗、動態局部修復，以及同時啟用兩項機制，以觀察各項機制對任務完成率的影響。四種設定皆使用相同任務集合，並以 TGC 與 SGC 作為比較指標。實驗結果顯示，僅啟用原子化經驗或僅啟用局部修復時，兩項指標皆高於基礎系統；同時啟用兩項機制的完整系統則取得四種設定中最高的 TGC 與 SGC。各組實際結果整理如表 \ref{tab:ablation_results} 所示。
+
+\begin{table}[htbp]
     \centering
     \caption{消融實驗結果}
     \label{tab:ablation_results}
@@ -195,7 +200,7 @@
     \end{tabularx}
 \end{table}
 
-表 \ref{tab:ablation_results} 將用於比較原子化經驗、局部修復與完整系統設定之 TGC 與 SGC 差異。本節後續將先分析原子化經驗與局部修復各自的影響，再透過完整系統與可取得完整軌跡的案例，討論兩項機制如何在規劃與執行階段共同影響任務完成。
+後續將先分析原子化經驗與局部修復各自的影響，再透過完整系統與可取得完整軌跡的案例，討論兩項機制如何在規劃與執行階段共同影響任務完成。
 
 \subsection{單一機制效益分析}
 
@@ -263,9 +268,11 @@
     \item \textbf{案例任務：}使用者需將 Venmo 上的朋友名單調整為與手機聯絡人中的朋友一致，必要時執行新增與移除操作。
     \item \textbf{消融差異：}此任務中，基礎系統與僅局部修復設定皆成功，但完整系統失敗。
     \item \textbf{完整系統失敗原因：}完整系統雖在初始計畫中納入手機聯絡人中 friend 關係的篩選，但後續使用 venmo.search\_users 將 phone friends 對應到 Venmo users 時，未充分處理搜尋 API 可能回傳廣泛候選結果的情況。系統將搜尋結果視為可直接操作的目標集合，而沒有再次依據原始 phone friend emails 驗證候選使用者身分，導致新增目標集合被擴大，最終好友新增與移除結果未符合評估條件。
-    \item \textbf{局部修復限制：}局部修復可處理登入、授權或缺少查詢步驟等執行階段錯誤；但當上游已產生錯誤或不穩定的目標集合時，修復雖可補入查詢或重試操作，仍未必能回復原本應被保留的任務限制。
+    \item \textbf{局部修復限制：}局部修復可處理由執行結果或語意判斷所辨識的步驟失敗，例如登入、授權或缺少查詢步驟等問題；但當上游已產生錯誤或不穩定的目標集合時，若該偏差未被辨識為步驟失敗，局部修復便不會被觸發。
     \item \textbf{影響：}此例顯示，完整系統雖能結合經驗檢索與局部修復，但在涉及搜尋式 API 與寫入操作的任務中，仍需要明確維持「原始任務條件 → 候選結果 → 實際操作目標」之間的對應關係。若搜尋結果被誤視為精確匹配，後續局部修復即使能補足授權或查詢步驟，也未必能避免錯誤目標被寫入。
 \end{itemize}
+從系統流程來看，API 呼叫完成後並非僅依據是否發生執行錯誤判斷步驟結果，系統亦會利用任務描述、步驟目標、API 參數、回傳結果與可取得的相依資料進行語意判斷。然而，局部修復與重新規劃仍以目前步驟先被判定為失敗為前提。若搜尋 API 回傳較廣泛的候選集合，但該結果仍符合目前步驟的文字目標，或原始任務限制未完整呈現於後續步驟及相依資訊中，該步驟仍可能被判定為成功。此時，若後續流程亦未產生足以暴露偏差的執行回饋，錯誤的操作目標可能持續傳遞，而不會啟動局部修復或重新規劃。
+
 因此，針對 RQ4，消融結果與代表性案例顯示，原子化經驗主要在規劃階段提供任務結構與資料流策略，動態局部修復則在執行失敗後調整局部計畫，兩者因作用於不同階段而形成互補，使完整系統取得四種設定中的最佳整體結果。然而，兩項機制的結合並非在所有任務中皆能帶來正向效果；當檢索經驗未能維持任務限制，或上游目標集合已產生偏差時，局部修復未必能恢復正確的任務條件。此結果指出未來可從三個方向持續改善：在經驗使用時納入任務限制、細化局部修復與重新規劃的適用範圍，以及建立更可靠的經驗累積機制，以維持任務條件、候選結果與實際操作目標之間的對應關係。
 
 \end{ZhChapter}
