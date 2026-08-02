@@ -14,7 +14,7 @@
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.95\textwidth]{figures/chapter3/cbr_apikgagent_architecture.png}
+    \includegraphics[width=1\textwidth]{figures/chapter3/cbr_apikgagent_architecture.png}
     \caption{CBR-APIKGAgent 系統架構圖}
     \label{fig:cbr_apikgagent_architecture}
 \end{figure}
@@ -60,7 +60,7 @@ CBR-APIKGAgent 在多步驟 API 代理人架構中加入原子化經驗重用與
 本節以演算法摘要呈現 CBR-APIKGAgent 從任務輸入到結果輸出的完整任務執行流程。演算法中與經驗檢索相關的步驟，將於第 \ref{sec:atomic_experience_reuse} 節進一步說明；與步驟失敗、局部修復及重新規劃回退相關的步驟，則於第 \ref{sec:dynamic_local_repair} 節展開說明。
 
 \begin{singlespace}
-\begin{algorithm}[H]
+\begin{algorithm}[htbp]
     \small
     \caption{CBR-APIKGAgent Overall Task Execution Algorithm}
     \label{alg:cbr_apikgagent_overall}
@@ -98,8 +98,6 @@ CBR-APIKGAgent 在多步驟 API 代理人架構中加入原子化經驗重用與
     \KwRet{$R$}
 \end{algorithm}
 \end{singlespace}
-
-\vspace{0.75em}
 
 演算法 \ref{alg:cbr_apikgagent_overall} 的詳細步驟說明如下。為了便於對照演算法結構，以下依照初始化階段、主要執行迴圈與結果回傳三個部分說明。
 其中，演算法中的 \(\mathcal{E}_{\mathrm{rp}}\) 表示重新規劃階段使用的經驗集合，包含規劃導向與修復導向兩類經驗。
