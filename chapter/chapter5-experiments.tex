@@ -121,7 +121,9 @@
 
 本節對應 RQ1，目的在於呈現 CBR-APIKGAgent 在 AppWorld \texttt{test\_normal} 上的整體任務完成率，並與既有方法進行比較。本實驗使用完整 \texttt{test\_normal} 168 個任務作為評估範圍，並依 AppWorld 官方評估結果計算 TGC 與 SGC。若任務執行後未產生完整評估報告或出現異常執行情形，該任務在統計中計為失敗。
 
-為呈現本研究方法於 AppWorld 基準中的相對位置，表 \ref{tab:overall_performance} 列出既有方法於 \texttt{test\_normal} 上的結果。比較對象包含 ReAct \cite{yao2023react}，以及 AppWorld 所定義的 PlanExec、FullCodeRefl 與 IPFunCall 基線，其方法與數據取自 AppWorld 原論文 \cite{trivedi2024appworld}；其餘方法包括 LOOP \cite{chen2025loop}、IBM CUGA \cite{shlomov2026benchmarks} 與 APIKGAgent \cite{wu2025apikgagent}，相關數據主要取自各方法原論文與 AppWorld 官方 leaderboard \cite{appworld_leaderboard}，其中 leaderboard 數據以 2026 年 7 月 13 日存取結果為準。LOOP 於表中採用官方 leaderboard 登載之 72.6\% TGC 與 53.6\% SGC；其原始論文則報告五次評估之平均結果 71.3 $\pm$ 1.3\% 與 53.6 $\pm$ 2.2\%，兩者屬不同統計紀錄，本表以前者作為公開 leaderboard 比較值。由於不同方法可能採用不同模型、示範資料、訓練策略或執行預算，因此本表主要作為 benchmark 相對表現參考，而非嚴格控制變因下的直接比較。
+為呈現本研究方法於 AppWorld 基準中的相對位置，表 \ref{tab:overall_performance} 列出既有方法於 \texttt{test\_normal} 上的結果。表中 GPT-4o 與 LLaMA3-70B 設定下之 ReAct、PlanExec、FullCodeRefl 與 IPFunCall 結果取自 AppWorld 原論文 \cite{trivedi2024appworld}；Qwen2.5-32B 設定下之 ReAct，以及 Gemini 2.5 Flash 設定下之 ReAct、FullCodeRefl 與 APIKGAgent 結果取自 APIKGAgent 原研究整理 \cite{wu2025apikgagent}；IBM CUGA 之結果取自其原研究報告 \cite{shlomov2026benchmarks}；LOOP 之結果取自本研究整理時可取得之 AppWorld 官方 leaderboard \cite{appworld_leaderboard}，其方法背景則參考 LOOP 原研究 \cite{chen2025loop}。其中，leaderboard 數據以 2026 年 7 月 13 日存取結果為準。CBR-APIKGAgent 為本研究於相同 \texttt{test\_normal} 任務集合下之實驗結果。
+
+由於不同方法可能採用不同模型、示範資料、訓練策略或執行預算，因此表 \ref{tab:overall_performance} 主要作為 benchmark 相對表現參考，而非嚴格控制變因下的直接比較。各機制對本研究系統造成的影響，將於後續消融實驗中以相同模型與相同任務集合進一步分析。
 
 \begin{table}[htbp]
     \centering
