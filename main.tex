@@ -90,7 +90,7 @@
 \begin{document}
 
 % % 封面、不用浮水印 Cover without a watermark
-% \include{page/titlepage.tex}
+\include{page/titlepage.tex}
 % 留白頁、不用浮水印 Blank page without a watermark
 \include{page/blankpage.tex}
 
@@ -138,5 +138,12 @@
 
 % 附錄 Appendix
 \include{appendix/prompts-code.tex}
+
+% 留白頁、不用浮水印或頁碼（紙本封底之前）
+\clearpage
+\ClearWallPaper
+\thispagestyle{empty}
+\null
+\newpage
 
 \end{document}
